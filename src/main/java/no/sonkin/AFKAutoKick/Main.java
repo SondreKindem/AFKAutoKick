@@ -33,7 +33,7 @@ public class Main extends JavaPlugin implements Listener {
         // If the server is full, the playerJoinEvent will never trigger, so we have to check regularly if someone is afk
         long timeBetween = 15 * 60 * 20; // Runs every 15 minutes
         getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> {
-            getLogger().info("[AFKAutoKick] Checking if an afk player must be kicked.");
+            getLogger().info("Checking if an afk player must be kicked.");
             tryKickAFK();
         }, timeBetween, timeBetween);
     }
@@ -65,7 +65,7 @@ public class Main extends JavaPlugin implements Listener {
             while(afkPlayers.size() > 0){
                 Player player = afkPlayers.pop();
                 if(player.isOnline()){
-                    getLogger().info("[AFKRemover] Kicking " + player.getName());
+                    getLogger().info("Kicking " + player.getName());
                     player.kickPlayer(kickMessage);
                     return;
                 }
