@@ -1,5 +1,5 @@
 main: no.sonkin.AFKAutoKick.Main
-name: AFKRemover
+name: AFKAutoKick
 version: 1.0
 api-version: 1.15
 author: Sonkin
