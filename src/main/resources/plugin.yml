@@ -1,0 +1,12 @@
+main: no.sonkin.AFKAutoKick.Main
+name: AFKRemover
+version: 1.0
+api-version: 1.15
+author: Sonkin
+description: Autoremoval of afk players on player limit reached
+depend:
+  - Essentials
+permissions:
+  afkautokick.bypass:
+    description: Prevents player from being kicked while afk
+    default: op
