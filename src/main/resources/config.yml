@@ -1,5 +1,4 @@
 # the offset is how many free slots there are before a player gets kicked,
 # i.e if offset is 2, an afk player will be kicked when there are only 2 slots left on server
-# Offset cannot be 0, as players are not allowed to join if server is full.
 kick-message: You were kicked because the server is almost full. Please rejoin :)
 offset: 1
