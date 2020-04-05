@@ -15,6 +15,8 @@ public class Main extends JavaPlugin implements Listener {
     private LinkedList<Player> afkPlayers;
     private String kickMessage;
     private int offset;
+    private int autocheck;
+    private boolean logToConsole;
 
     @Override
     public void onEnable() {
@@ -25,17 +27,22 @@ public class Main extends JavaPlugin implements Listener {
         afkPlayers = new LinkedList<>();
 
         kickMessage = getConfig().getString("kick-message");
-        if(kickMessage == null){
+        if (kickMessage == null) {
             kickMessage = "You were kicked because the server is almost full. Please rejoin :)";
         }
         offset = getConfig().getInt("offset");
+        autocheck = getConfig().getInt("autocheck");
+        logToConsole = getConfig().getBoolean("logToConsole", true);
 
-        // If the server is full, the playerJoinEvent will never trigger, so we have to check regularly if someone is afk
-        long timeBetween = 15 * 60 * 20; // Runs every 15 minutes
-        getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> {
-            getLogger().info("Checking if an afk player must be kicked.");
-            tryKickAFK();
-        }, timeBetween, timeBetween);
+        if (autocheck > 0) {
+            // If the server is full, the playerJoinEvent will never trigger, so we have to check regularly if someone is afk
+            long timeBetween = autocheck * 60 * 20; // Runs every 15 minutes
+            getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> {
+                if (logToConsole)
+                    getLogger().info("Checking if an afk player must be kicked.");
+                tryKickAFK();
+            }, timeBetween, timeBetween);
+        }
     }
 
     @EventHandler
@@ -44,14 +51,14 @@ public class Main extends JavaPlugin implements Listener {
     }
 
     @EventHandler
-    void onAfkEvent(AfkStatusChangeEvent event){
+    void onAfkEvent(AfkStatusChangeEvent event) {
         Player player = event.getAffected().getBase();
-        if(player.isOp() || player.hasPermission("afkautokick.bypass")){
+        if (player.isOp() || player.hasPermission("afkautokick.bypass")) {
             return;
         }
-        if(event.getValue()){
+        if (event.getValue()) {
             afkPlayers.add(player);
-        }else{
+        } else {
             afkPlayers.remove(player);
         }
     }
@@ -59,13 +66,14 @@ public class Main extends JavaPlugin implements Listener {
     /**
      * Kicks the player who has been afk the longest if the server is full or almost full
      */
-    private void tryKickAFK(){
-        if(getServer().getOnlinePlayers().size() >= maxPlayers - offset){
+    private void tryKickAFK() {
+        if (getServer().getOnlinePlayers().size() >= maxPlayers - offset) {
             // getServer().getLogger().severe(afkPlayers.toString());
-            while(afkPlayers.size() > 0){
+            while (afkPlayers.size() > 0) {
                 Player player = afkPlayers.pop();
-                if(player.isOnline()){
-                    getLogger().info("Kicking " + player.getName());
+                if (player.isOnline()) {
+                    if (logToConsole)
+                        getLogger().info("Kicking " + player.getName());
                     player.kickPlayer(kickMessage);
                     return;
                 }

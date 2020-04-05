@@ -1,4 +1,13 @@
 # the offset is how many free slots there are before a player gets kicked,
 # i.e if offset is 2, an afk player will be kicked when there are only 2 slots left on server
+# Autocheck is how many minutes the plugin should wait before checking if the server is almost full.
+# Set autocheck to 0 to disable automatic checking. if you do this then afk players will not
+# be removed once the server is full.
+
 kick-message: You were kicked because the server is almost full. Please rejoin :)
+
 offset: 1
+
+autocheck: 15
+
+logToConsole: true
